@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function App() {
   const dzwieki = [
@@ -24,10 +24,9 @@ function App() {
     7: [0, 2, 4, 7, 10],
     mb57: [0, 1, 3, 6, 10],
   };
-  const dzwAkordowy = "a";
-  const modAkordowy = "mb57";
+  const [dzwAkordowy, setDzwAkordowy] = useState("a");
+  const [modAkordowy, setModAkordowy] = useState("m7");
   const [ogrywane, setOgrywane] = useState([]);
-  console.log(modulacje["m7"]);
   function dzwiekiEtiudy() {
     const startingSound = dzwieki.indexOf(dzwAkordowy);
     const buffer = [];
@@ -39,9 +38,28 @@ function App() {
   }
   useEffect(() => {
     dzwiekiEtiudy();
-  }, []);
+  }, [dzwAkordowy, modAkordowy]);
+  const dzwRef = useRef(null);
+  const modRef = useRef(null);
   return (
     <div className="App">
+      <select
+        ref={dzwRef}
+        onChange={() => setDzwAkordowy(dzwRef.current.value)}
+      >
+        {dzwieki.map((a) => (
+          <option value={a}>{a}</option>
+        ))}
+      </select>
+      <select
+        ref={modRef}
+        onChange={() => setModAkordowy(modRef.current.value)}
+      >
+        <option value={"m7"}>m7</option>
+        <option value={"maj7"}>maj7</option>
+        <option value={"7"}>7</option>
+        <option value={"mb57"}>mb57</option>
+      </select>
       <div className="gryf">
         {struny.toReversed().map((a) => (
           <Struna nuta={a} dzwieki={dzwieki} ogrywane={ogrywane}></Struna>
