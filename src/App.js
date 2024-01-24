@@ -51,11 +51,12 @@ function App() {
   const bpmRef = useRef(null);
 
   function metronomClick() {
+    setMetronom(((metrum + 1) % 4) + 1);
     metrum++;
     console.log(metrum);
-    setMetronom(metrum);
     if (metrum === 4) {
       metrum = 0;
+
       if (grany < progresja.length - 1) {
         grany = grany + 1;
       } else {
@@ -130,14 +131,13 @@ function App() {
         ></input>
         <br></br>
       </div>
+      <h1>
+        {" "}
+        {dzwAkordowy}
+        {modAkordowy}
+      </h1>
       <Metronom metronom={metronom}></Metronom>
       <div className="granie">
-        <h1>
-          {" "}
-          {dzwAkordowy}
-          {modAkordowy}
-        </h1>
-
         <div className="gryf">
           {struny.toReversed().map((a) => (
             <Struna
@@ -181,8 +181,8 @@ function Struna(props) {
 function Metronom(props) {
   const { metronom } = props;
   return (
-    <div style={{ width: "100px" }}>
-      <span style={{ float: metronom % 2 === 0 ? "left" : "right" }}>|</span>
+    <div style={{ width: "100px" }} className="metronom">
+      <span style={{ float: metronom % 2 !== 0 ? "left" : "right" }}>|</span>
       <span>{metronom}</span>
     </div>
   );
