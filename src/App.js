@@ -34,6 +34,7 @@ function App() {
   const [pokazujGrane, setPokazujGrane] = useState(true);
   const [pokazujPryme, setPokazujPryme] = useState(false);
   const [metronom, setMetronom] = useState(metrum);
+  const [trafione, setTrafione] = useState(null);
   function dzwiekiEtiudy() {
     const startingSound = dzwieki.indexOf(dzwAkordowy);
     const buffer = [];
@@ -81,8 +82,24 @@ function App() {
       intervalid = setInterval(metronomClick, delay);
     }
   }
+  function grajSolo(dzwiek) {
+    metronomClick();
+    if (ogrywane.includes(dzwiek)) {
+      setTrafione(true);
+    } else {
+      setTrafione(false);
+    }
+  }
+  console.log(trafione);
   return (
-    <div className="App">
+    <div
+      className="App"
+      style={{
+        backgroundColor: trafione
+          ? "rgba(34, 239, 36, 0.15)"
+          : "rgba(240, 34, 34, 0.15)",
+      }}
+    >
       <div>
         Akord:{" "}
         <select
@@ -147,6 +164,8 @@ function App() {
               pokazujGryf={pokazujGryf}
               pokazujPryme={pokazujPryme}
               pokazujGrane={pokazujGrane}
+              metronomClick={metronomClick}
+              grajSolo={grajSolo}
             ></Struna>
           ))}
         </div>
@@ -155,8 +174,15 @@ function App() {
   );
 }
 function Struna(props) {
-  const { nuta, dzwieki, ogrywane, pokazujGryf, pokazujGrane, pokazujPryme } =
-    props;
+  const {
+    nuta,
+    dzwieki,
+    ogrywane,
+    pokazujGryf,
+    pokazujGrane,
+    pokazujPryme,
+    grajSolo,
+  } = props;
   let dzwStruny = dzwieki
     .concat(dzwieki)
     .slice(dzwieki.findIndex((a) => a === nuta));
@@ -165,6 +191,7 @@ function Struna(props) {
     <div className="struna">
       {dzwStruny.map((a) => (
         <span
+          onClick={() => grajSolo(a)}
           className={"dzwiek " + (pokazujPryme && a === ogrywane[0] && "pryma")}
           style={{
             backgroundColor:
