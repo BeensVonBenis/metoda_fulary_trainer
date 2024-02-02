@@ -64,7 +64,7 @@ function App() {
         grany = 0;
       }
       if (progresja[grany].includes("#")) {
-        setDzwAkordowy(...progresja[grany].slice(0, -2));
+        setDzwAkordowy(progresja[grany][0] + "#");
         setModAkordowy(...progresja[grany].slice(2));
       } else {
         setDzwAkordowy(...progresja[grany][0]);
@@ -148,7 +148,9 @@ function App() {
         ></input>
         <br></br>
       </div>
-      <h1>
+      <br></br>
+      <Progresja metronom={metronom} grany={grany}></Progresja>
+      <h1 style={{ marginTop: "0px" }}>
         {" "}
         {dzwAkordowy}
         {modAkordowy}
@@ -214,4 +216,17 @@ function Metronom(props) {
     </div>
   );
 }
+
+function Progresja(props) {
+  const { grany } = props;
+  console.log(grany);
+  return (
+    <div>
+      {progresja.map((a, b) => (
+        <span style={{ color: grany === b ? "red" : "black" }}>{a} </span>
+      ))}
+    </div>
+  );
+}
+
 export default App;
