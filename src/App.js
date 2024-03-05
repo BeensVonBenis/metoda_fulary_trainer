@@ -63,6 +63,7 @@ function App() {
   const [grajDzwieki, setGrajDzwieki] = useState(true);
   const [metronom, setMetronom] = useState(metrum);
   const [trafione, setTrafione] = useState(null);
+  const [metronomOn, setMetronomOn] = useState(false);
   function dzwiekiEtiudy() {
     const startingSound = dzwieki.indexOf(dzwAkordowy);
     const buffer = [];
@@ -90,7 +91,7 @@ function App() {
       } else {
         grany = 0;
       }
-      if (progresja.length === 1) {
+      if (!(progresja.length === 0 || progresja[0] === "")) {
         if (progresja[grany].includes("#")) {
           setDzwAkordowy(progresja[grany][0] + "#");
           setModAkordowy(...progresja[grany].slice(2));
@@ -109,13 +110,20 @@ function App() {
     const delay = (60 * 1000) / bpmRef.current.value;
     clearInterval(intervalid);
     if (delay === Infinity) {
+      setMetronomOn(false);
       metronomClick();
     } else {
+      setMetronomOn(true);
+      setMetronom(1);
+      metrum = 0;
+      grany = 0;
       intervalid = setInterval(metronomClick, delay);
     }
   }
   function grajSolo(dzwiek, oktawa) {
-    metronomClick();
+    if (!metronomOn) {
+      metronomClick();
+    }
     if (grajDzwieki) {
       synth.triggerAttackRelease(`${dzwiek}${oktawa}`, `8n`);
     }
