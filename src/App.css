@@ -51,6 +51,7 @@
 }
 .gryf {
   border: 1px solid black;
+  user-select: none;
 }
 .struna > *:first-child {
   border-right: 6px double black;
@@ -70,4 +71,9 @@
 }
 .metronom {
   margin-bottom: 1em;
+}
+.interwal {
+  font-size: small;
+  position: absolute;
+  float: right;
 }
