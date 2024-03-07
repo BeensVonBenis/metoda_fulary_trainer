@@ -7,8 +7,10 @@ let progresja = [];
 let metrum = 0;
 let grany = 0;
 
+const synth = new Tone.Synth().toDestination();
+const drum = new Tone.MembraneSynth().toDestination();
+
 function App() {
-  const synth = new Tone.Synth().toDestination();
   const dzwieki = [
     "a",
     "a#",
@@ -85,6 +87,7 @@ function App() {
     metrum++;
     if (metrum === 4) {
       metrum = 0;
+      drum.triggerAttackRelease("D4", "8n");
 
       if (grany < progresja.length - 1) {
         grany = grany + 1;
@@ -100,6 +103,8 @@ function App() {
           setModAkordowy(progresja[grany].slice(1));
         }
       }
+    } else {
+      drum.triggerAttackRelease("C2", "8n");
     }
   }
   async function grajProg() {
@@ -121,19 +126,39 @@ function App() {
     }
   }
   function grajSolo(dzwiek, oktawa) {
-    if (!metronomOn) {
+    console.log(dzwiek);
+    if (!metronomOn && oktawa !== "mute") {
       metronomClick();
     }
     if (grajDzwieki) {
-      synth.triggerAttackRelease(`${dzwiek}${oktawa}`, `8n`);
+      if (oktawa !== "mute") {
+        synth.triggerAttackRelease(`${dzwiek}${oktawa}`, `8n`);
+      }
     }
-
+    console.log(ogrywane.includes(dzwiek));
+    console.log(ogrywane);
     if (ogrywane.includes(dzwiek)) {
       setTrafione(true);
     } else {
       setTrafione(false);
     }
   }
+  window.setTimeout(() => {
+    getNoteFromTuner();
+  }, 10);
+  const [noteFromTuner, setNoteFromTuner] = useState("");
+  function getNoteFromTuner() {
+    const note = document
+      .getElementById("tuner")
+      .contentWindow.document.body.innerText.split("\n")[0];
+    setNoteFromTuner(note);
+    if (note !== "Aktywuj" && note) grajSolo(noteFromTuner, "mute");
+  }
+  const iframe =
+    '<iframe id="tuner" src="https://piotr.it-consultingtk.pl/metodafularytrainer/tuner.html" allow="camera; microphone" width="540" height="50"></iframe>';
+  useEffect(() => {
+    window.setInterval(getNoteFromTuner, 1000);
+  }, []);
   return (
     <div
       className="App"
@@ -143,14 +168,17 @@ function App() {
           : "rgba(240, 34, 34, 0.15)",
       }}
     >
+      <div dangerouslySetInnerHTML={{ __html: iframe }} />
       <div>
         Akord:{" "}
         <select
           ref={dzwRef}
           onChange={() => setDzwAkordowy(dzwRef.current.value)}
         >
-          {dzwieki.map((a) => (
-            <option value={a}>{a}</option>
+          {dzwieki.map((a, b) => (
+            <option key={b} value={a}>
+              {a}
+            </option>
           ))}
         </select>
         <select
@@ -216,8 +244,9 @@ function App() {
       <Metronom metronom={metronom}></Metronom>
       <div className="granie">
         <div className="gryf">
-          {struny.toReversed().map((a) => (
+          {struny.toReversed().map((a, i) => (
             <Struna
+              key={i}
               nuta={a[0]}
               oktawa={a[1]}
               dzwieki={dzwieki}
@@ -260,6 +289,7 @@ function Struna(props) {
       {dzwStruny.map((a, i) => {
         return (
           <span
+            key={i}
             onClick={() => grajSolo(a, oktawa + (i >= nowaOktawa))}
             className={
               "dzwiek " + (pokazujPryme && a === ogrywane[0] && "pryma")
@@ -295,7 +325,9 @@ function Progresja(props) {
   return (
     <div>
       {progresja.map((a, b) => (
-        <span style={{ color: grany === b ? "red" : "black" }}>{a} </span>
+        <span key={b} style={{ color: grany === b ? "red" : "black" }}>
+          {a}{" "}
+        </span>
       ))}
     </div>
   );
