@@ -66,6 +66,7 @@ function App() {
   const [metronom, setMetronom] = useState(metrum);
   const [trafione, setTrafione] = useState(null);
   const [metronomOn, setMetronomOn] = useState(false);
+  const [click, toggleClick] = useState(false);
   function dzwiekiEtiudy() {
     const startingSound = dzwieki.indexOf(dzwAkordowy);
     const buffer = [];
@@ -87,7 +88,9 @@ function App() {
     metrum++;
     if (metrum === 4) {
       metrum = 0;
-      drum.triggerAttackRelease("D4", "8n");
+      if (click) {
+        drum.triggerAttackRelease("D4", "8n");
+      }
 
       if (grany < progresja.length - 1) {
         grany = grany + 1;
@@ -104,7 +107,9 @@ function App() {
         }
       }
     } else {
-      drum.triggerAttackRelease("C2", "8n");
+      if (click) {
+        drum.triggerAttackRelease("C2", "8n");
+      }
     }
   }
   async function grajProg() {
@@ -232,6 +237,9 @@ function App() {
           onClick={() => setPokazujInterwaly((a) => !a)}
           type="checkbox"
         ></input>
+        <br></br>
+        <label>Klikaj</label>
+        <input onClick={() => toggleClick((a) => !a)} type="checkbox"></input>
         <br></br>
       </div>
       <br></br>
