@@ -3,15 +3,30 @@
   background-color: #5c5c5c;
   height: fit-content;
   user-select: none;
+  display: flex;
+  height: 100%;
 }
 .table {
   margin: 0 !important;
   user-select: none;
 }
+th:first-child {
+  width: 40px;
+}
 .fret {
   user-select: none;
   padding: 0 !important;
   height: 48px;
+  &:first-child {
+    background-image: repeating-linear-gradient(
+      -26deg,
+      rgba(255, 255, 255, 0.25),
+      rgba(255, 255, 255, 0.25) 2px,
+      transparent 3px,
+      transparent 7px
+    );
+    background-size: 6px 8px;
+  }
   div {
     cursor: crosshair;
     display: flex;
@@ -21,10 +36,14 @@
     height: 100%;
 
     &.marker {
-      background-color: #7575751a;
-      &:hover {
-        background-color: #d1d1d11a;
-      }
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.25),
+        rgba(255, 255, 255, 0.25) 1px,
+        transparent 1px,
+        transparent 6px
+      );
+      background-size: 4px 4px;
     }
     &:hover {
       background-color: #7575751a;

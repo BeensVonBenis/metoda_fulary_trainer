@@ -1,6 +1,7 @@
 import { Table } from "react-bootstrap";
 import "./Gryf.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as Soundfont from "soundfont-player";
 
 function getOnString(notes, start, range) {
   let oktawa = start[1];
@@ -18,7 +19,35 @@ function getOnString(notes, start, range) {
   });
 }
 
-export default function Gryf({ notes, grane, strings, range, markers }) {
+function getNotesOfHarmony(base, harmony, notes) {
+  const displacement = notes.findIndex((a) => a === base);
+  return [
+    Object.values(harmony).map((a) => notes[(a + displacement) % notes.length]),
+  ];
+}
+
+export default function Gryf({
+  notes,
+  played,
+  strings,
+  range,
+  markers,
+  intervals,
+  harmonies,
+}) {
+  const [correctNotes, setCorrectNotes] = getNotesOfHarmony(
+    played[0],
+    harmonies[played[1]],
+    notes
+  );
+  const [synth, setSynth] = useState(null);
+  useEffect(() => {
+    Soundfont.instrument(new AudioContext(), "acoustic_guitar_steel").then(
+      (res) => {
+        setSynth(res);
+      }
+    );
+  }, []);
   return (
     <div className="Gryf">
       <Table
@@ -27,15 +56,23 @@ export default function Gryf({ notes, grane, strings, range, markers }) {
         style={{ tableLayout: "fixed" }}
         className="table"
       >
+        <thead>
+          <tr>
+            {[...new Array(range)].map((a, i) => (
+              <th key={i}>{i}</th>
+            ))}
+          </tr>
+        </thead>
         <tbody>
           {[...strings].reverse().map((a, i) => (
             <Struna
               key={i}
               notes={notes}
-              grane={grane}
+              correctNotes={correctNotes}
               self={a}
               range={range}
               markers={markers}
+              synth={synth}
             ></Struna>
           ))}
         </tbody>
@@ -43,25 +80,31 @@ export default function Gryf({ notes, grane, strings, range, markers }) {
     </div>
   );
 }
-function Struna({ notes, grane, strings, self, range, markers }) {
+function Struna({ notes, correctNotes, self, range, markers, synth }) {
   const onString = getOnString(notes, self, range);
-
   return (
     <tr className="Struna">
       {onString.map((a, i) => (
-        <Fret key={i} markers={markers} a={a} i={i}></Fret>
+        <Fret
+          key={i}
+          markers={markers}
+          a={a}
+          i={i}
+          correct={correctNotes.includes(a[0])}
+          synth={synth}
+        ></Fret>
       ))}
     </tr>
   );
 }
-function Fret({ a, markers, i }) {
+function Fret({ a, markers, i, correct, synth }) {
   const [fretClass, setFretClass] = useState("fret");
   return (
     <th className={fretClass}>
       <div
         onClick={() => {
-          setFretClass("fret correct");
-          console.log("sex");
+          setFretClass(`fret ${correct ? "correct" : "wrong"}`);
+          synth.play(a[0] + a[1]);
           window.setTimeout(() => {
             setFretClass("fret");
           }, 500);
