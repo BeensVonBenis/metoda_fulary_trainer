@@ -1,0 +1,56 @@
+.Gryf {
+  width: 100%;
+  background-color: #5c5c5c;
+  height: fit-content;
+  user-select: none;
+}
+.table {
+  margin: 0 !important;
+  user-select: none;
+}
+.fret {
+  user-select: none;
+  padding: 0 !important;
+  height: 48px;
+  div {
+    cursor: crosshair;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    &.marker {
+      background-color: #7575751a;
+      &:hover {
+        background-color: #d1d1d11a;
+      }
+    }
+    &:hover {
+      background-color: #7575751a;
+    }
+  }
+  @keyframes correct {
+    from {
+      background-color: rgba(24, 214, 34, 0.438);
+    }
+    to {
+    }
+  }
+  @keyframes wrong {
+    from {
+      background-color: rgba(182, 0, 0, 0.438);
+    }
+    to {
+    }
+  }
+
+  &.correct {
+    animation-name: correct;
+    animation-duration: 0.5s;
+  }
+  &.wrong {
+    animation-name: wrong;
+    animation-duration: 0.5s;
+  }
+}

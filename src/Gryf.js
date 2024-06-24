@@ -1,5 +1,6 @@
 import { Table } from "react-bootstrap";
-import "./Gryf.css";
+import "./Gryf.scss";
+import { useState } from "react";
 
 function getOnString(notes, start, range) {
   let oktawa = start[1];
@@ -17,30 +18,58 @@ function getOnString(notes, start, range) {
   });
 }
 
-export default function Gryf({ notes, grane, strings, range }) {
+export default function Gryf({ notes, grane, strings, range, markers }) {
   return (
     <div className="Gryf">
-      <Table>
-        {strings.reverse().map((a, i) => (
-          <Struna
-            key={i}
-            notes={notes}
-            grane={grane}
-            self={a}
-            range={range}
-          ></Struna>
-        ))}
+      <Table
+        striped
+        bordered
+        style={{ tableLayout: "fixed" }}
+        className="table"
+      >
+        <tbody>
+          {[...strings].reverse().map((a, i) => (
+            <Struna
+              key={i}
+              notes={notes}
+              grane={grane}
+              self={a}
+              range={range}
+              markers={markers}
+            ></Struna>
+          ))}
+        </tbody>
       </Table>
     </div>
   );
 }
-function Struna({ notes, grane, strings, self, range }) {
+function Struna({ notes, grane, strings, self, range, markers }) {
   const onString = getOnString(notes, self, range);
+
   return (
     <tr className="Struna">
       {onString.map((a, i) => (
-        <th>{a[0]}</th>
+        <Fret key={i} markers={markers} a={a} i={i}></Fret>
       ))}
     </tr>
+  );
+}
+function Fret({ a, markers, i }) {
+  const [fretClass, setFretClass] = useState("fret");
+  return (
+    <th className={fretClass}>
+      <div
+        onClick={() => {
+          setFretClass("fret correct");
+          console.log("sex");
+          window.setTimeout(() => {
+            setFretClass("fret");
+          }, 500);
+        }}
+        className={markers.includes(i) ? "marker" : ""}
+      >
+        {a[0]}
+      </div>
+    </th>
   );
 }

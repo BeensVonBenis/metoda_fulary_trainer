@@ -7,6 +7,7 @@ import Gryf from "./Gryf";
 
 export default function App() {
   const range = 15;
+  const markers = [1, 3, 5, 7, 9, 12, 15, 17, 19, 21, 24];
   const tuner = createTuner({
     onNote: (note) => {
       console.log("Note:", note);
@@ -45,8 +46,14 @@ export default function App() {
   ]);
   const [grane, setGrane] = useState([]);
   return (
-    <div className="App">
-      <Gryf notes={notes} strings={strings} grane={grane} range={range}></Gryf>
+    <div className="App" data-bs-theme="dark">
+      <Gryf
+        notes={notes}
+        strings={strings}
+        grane={grane}
+        range={range}
+        markers={markers}
+      ></Gryf>
     </div>
   );
 }
