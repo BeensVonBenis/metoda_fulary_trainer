@@ -53,6 +53,7 @@ export default function Gryf({
   );
   const [synth, setSynth] = useState(null);
   useEffect(() => {
+    console.log("tworzenie nowego syntezatora");
     Soundfont.instrument(new AudioContext(), "acoustic_guitar_steel").then(
       (res) => {
         setSynth(res);
@@ -170,8 +171,37 @@ function Fret({
   showFirst,
 }) {
   const [fretClass, setFretClass] = useState(
-    `fret ${showCorrect && correct ? " marked" : ""}`
+    `fret ${showCorrect && correct ? " marked" : ""} ${
+      getInterval(played[0], a[0], notes, intervals)[0] === 0 &&
+      showFirst &&
+      !showIntervals &&
+      !showNotes
+        ? "first"
+        : ""
+    }`
   );
+  useEffect(() => {
+    setFretClass(
+      `fret ${showCorrect && correct ? " marked" : ""} ${
+        getInterval(played[0], a[0], notes, intervals)[0] === 0 &&
+        showFirst &&
+        !showIntervals &&
+        !showNotes
+          ? "first"
+          : ""
+      }`
+    );
+  }, [
+    showCorrect,
+    showFirst,
+    showNotes,
+    showIntervals,
+    a,
+    correct,
+    played,
+    intervals,
+    notes,
+  ]);
   return (
     <th className={fretClass}>
       <div
@@ -179,11 +209,27 @@ function Fret({
           setFretClass(
             `fret ${correct ? "correct" : "wrong"} ${
               showCorrect && correct ? " marked" : ""
+            } ${
+              getInterval(played[0], a[0], notes, intervals)[0] === 0 &&
+              showFirst &&
+              !showIntervals &&
+              !showNotes
+                ? "first"
+                : ""
             }`
           );
           synth.play(a[0] + a[1]);
           window.setTimeout(() => {
-            setFretClass(`fret ${showCorrect && correct ? " marked" : ""}`);
+            setFretClass(
+              `fret ${showCorrect && correct ? " marked" : ""} ${
+                getInterval(played[0], a[0], notes, intervals)[0] === 0 &&
+                showFirst &&
+                !showIntervals &&
+                !showNotes
+                  ? "first"
+                  : ""
+              }`
+            );
           }, 500);
         }}
         className={markers.includes(i) ? "marker" : ""}
@@ -198,11 +244,12 @@ function Fret({
           }}
         >
           {showNotes ? (
-            <div>{a[0]}</div>
+            <span>{a[0]}</span>
           ) : showFirst &&
             getInterval(played[0], a[0], notes, intervals)[0] === 0 &&
-            !showIntervals ? (
-            "@"
+            !showIntervals &&
+            !showCorrect ? (
+            <span style={{ fontWeight: "100", fontSize: "larger" }}>◉</span>
           ) : (
             ""
           )}

@@ -14,8 +14,12 @@
   width: 100%;
 }
 .opcjeTable {
-  * {
+  th,
+  td {
     background-color: rgba(0, 0, 0, 0) !important;
     border: none;
+  }
+  button {
+    background-color: rgba(0, 0, 0, 0) !important;
   }
 }

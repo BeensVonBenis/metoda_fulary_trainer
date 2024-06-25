@@ -37,6 +37,7 @@ export default function Klawisz({
   );
   const [synth, setSynth] = useState(null);
   useEffect(() => {
+    console.log("tworzenie nowego syntezatora");
     Soundfont.instrument(new AudioContext(), "acoustic_grand_piano").then(
       (res) => {
         setSynth(res);
@@ -113,8 +114,39 @@ function Przycisk({
   const [keyClass, setFKeyClass] = useState(
     `key ${a[0].includes("#") ? "sharp" : ""} ${
       showCorrect && correct ? " marked" : ""
+    } ${
+      getInterval(played[0], a[0], notes, intervals)[0] === 0 &&
+      showFirst &&
+      !showIntervals &&
+      !showNotes
+        ? "first"
+        : ""
     }`
   );
+  useEffect(() => {
+    setFKeyClass(
+      `key ${a[0].includes("#") ? "sharp" : ""} ${
+        showCorrect && correct ? " marked" : ""
+      } ${
+        getInterval(played[0], a[0], notes, intervals)[0] === 0 &&
+        showFirst &&
+        !showIntervals &&
+        !showNotes
+          ? "first"
+          : ""
+      }`
+    );
+  }, [
+    showCorrect,
+    showFirst,
+    showNotes,
+    showIntervals,
+    a,
+    correct,
+    played,
+    intervals,
+    notes,
+  ]);
   return (
     <div
       className={keyClass}
@@ -122,21 +154,54 @@ function Przycisk({
         setFKeyClass(
           `key ${a[0].includes("#") ? "sharp" : ""} ${
             correct ? "correct" : "wrong"
-          } ${showCorrect && correct ? " marked" : ""}`
+          } ${showCorrect && correct ? "marked" : ""} ${
+            getInterval(played[0], a[0], notes, intervals)[0] === 0 &&
+            showFirst &&
+            !showIntervals &&
+            !showNotes
+              ? "first"
+              : ""
+          }}`
         );
         synth.play(a[0] + a[1]);
         window.setTimeout(() => {
           setFKeyClass(
             `key ${a[0].includes("#") ? "sharp" : ""} ${
               showCorrect && correct ? " marked" : ""
+            } ${
+              getInterval(played[0], a[0], notes, intervals)[0] === 0 &&
+              showFirst &&
+              !showIntervals &&
+              !showNotes
+                ? "first"
+                : ""
             }`
           );
         }, 500);
       }}
     >
-      <span>
-        {a[0]}
-        <span className="intervalMarker">
+      <span
+        style={{
+          color:
+            showFirst && getInterval(played[0], a[0], notes, intervals)[0] === 0
+              ? "red"
+              : "white",
+        }}
+      >
+        {showNotes ? (
+          <span>
+            {a[0]}
+            {a[1]}
+          </span>
+        ) : showFirst &&
+          getInterval(played[0], a[0], notes, intervals)[0] === 0 &&
+          !showIntervals &&
+          !showCorrect ? (
+          <span style={{ fontWeight: "100", fontSize: "larger" }}>◉</span>
+        ) : (
+          ""
+        )}
+        <span className={!showNotes ? "" : "intervalMarker"}>
           {showIntervals && getInterval(played[0], a[0], notes, intervals)[1]}
         </span>
       </span>

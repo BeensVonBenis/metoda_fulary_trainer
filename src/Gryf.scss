@@ -26,6 +26,16 @@ th:first-child {
       transparent 7px
     );
     &.marked {
+      &.first {
+        background-image: repeating-linear-gradient(
+          -26deg,
+          rgba(0, 255, 98, 0.541),
+          rgba(0, 195, 255, 0.342) 2px,
+          transparent 3px,
+          transparent 7px
+        );
+        background-size: 6px 8px;
+      }
       background-image: repeating-linear-gradient(
         -26deg,
         rgba(0, 240, 108, 0.548),

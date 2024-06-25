@@ -13,6 +13,16 @@ code {
 }
 
 .marked {
+  &.first {
+    background-image: repeating-linear-gradient(
+      233deg,
+      rgb(0, 255, 98),
+      rgb(0, 195, 255) 1px,
+      transparent -19px,
+      transparent 20px
+    );
+    background-size: 50px;
+  }
   background-image: repeating-linear-gradient(
     233deg,
     rgb(0, 240, 108),
@@ -25,4 +35,9 @@ code {
 .intervalMarker {
   font-size: x-small;
   position: absolute;
+}
+.col,
+.row {
+  padding: 0;
+  margin: 0 !important;
 }
