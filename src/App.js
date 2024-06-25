@@ -1,5 +1,14 @@
 import { createTuner } from "@chordbook/tuner";
-import { Button, Tab, Tabs } from "react-bootstrap";
+import {
+  Button,
+  FormCheck,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  Tab,
+  Table,
+  Tabs,
+} from "react-bootstrap";
 import { useState } from "react";
 import * as Tone from "tone";
 import "./App.css";
@@ -60,16 +69,51 @@ export default function App() {
     "7w",
   ];
   const harmonies = {
+    mol5: [0, 3, 5, 7, 10],
+    dur5: [0, 2, 4, 7, 9],
     m7: [0, 2, 3, 7, 10],
     maj7: [0, 2, 4, 7, 11],
     7: [0, 2, 4, 7, 10],
     mb57: [0, 1, 3, 6, 10],
-    mol: [0, 3, 5, 7, 10],
-    dur: [0, 2, 4, 7, 9],
   };
-  const [played, setPlayed] = useState(["a", "m7"]);
+  const [played, setPlayed] = useState(["f", "mol5"]);
+  const [showCorrect, setShowCorrect] = useState(false);
+  const [showIntervals, setShowIntervals] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
+  const [showFirst, setShowFirst] = useState(true);
   return (
     <div className="App" data-bs-theme="dark">
+      <div>
+        <Table style={{ tableLayout: "fixed" }} className="opcjeTable">
+          <thead>
+            <tr>
+              <th colSpan={2} style={{ width: "50%" }}>
+                Opcje
+              </th>
+              <th colSpan={2} style={{ width: "50%" }}>
+                Harmonia
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>a</td>
+              <td>c</td> <td colSpan={2}>adada</td>
+            </tr>
+            <tr>
+              <td>a</td>
+              <td>c</td>{" "}
+              <td colSpan={2} rowSpan={2}>
+                dtat
+              </td>
+            </tr>
+            <tr>
+              <td>a</td>
+              <td>c</td>
+            </tr>
+          </tbody>
+        </Table>
+      </div>
       <div className="Instrumenty">
         <Tabs justify fill style={{ width: "100%" }}>
           <Tab eventKey={"gitara"} title="gitara">
@@ -81,6 +125,10 @@ export default function App() {
               markers={markers}
               intervals={intervals}
               harmonies={harmonies}
+              showCorrect={showCorrect}
+              showIntervals={showIntervals}
+              showNotes={showNotes}
+              showFirst={showFirst}
             ></Gryf>
           </Tab>
           <Tab eventKey={"klawisz"} title="kalwisz">
@@ -91,6 +139,10 @@ export default function App() {
               markers={markers}
               intervals={intervals}
               harmonies={harmonies}
+              showCorrect={showCorrect}
+              showIntervals={showIntervals}
+              showNotes={showNotes}
+              showFirst={showFirst}
             ></Klawisz>
           </Tab>
         </Tabs>
